@@ -1,0 +1,50 @@
+name: Build & Deploy to Itch.io
+
+on:
+  push:
+    branches:
+      - main
+      - master
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-cache: npm
+          node-version: 20
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Build Game
+        run: npm run build
+
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: panel-de-clone-html5
+          path: dist/
+
+      # This step deploys the built game to Itch.io using Butler.
+      # Remember to add these secret keys in your GitHub repository's Settings > Secrets and Variables > Actions:
+      # - BUTLER_API_KEY (Generate this on your Itch.io account under Settings > Developer > API Keys)
+      # - ITCH_USERNAME (Your Itch.io username)
+      # - ITCH_GAME_ID (The URL slug of your Itch.io game, e.g. "panel-de-clone")
+      - name: Deploy to Itch.io
+        uses: josephbmanley/butler-publish-itchio-action@v1.0.3
+        env:
+          BUTLER_CREDENTIALS: ${{ secrets.BUTLER_API_KEY }}
+          CHANNEL: html5
+          ITCH_GAME: ${{ secrets.ITCH_GAME_ID }}
+          ITCH_USER: ${{ secrets.ITCH_USERNAME }}
+          PACKAGE: dist
