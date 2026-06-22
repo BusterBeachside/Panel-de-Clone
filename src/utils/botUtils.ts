@@ -46,7 +46,10 @@ export const processBotLogic = (
           isTycoon, 
           state.botRecentSwaps, 
           state.botIdleFrames, 
-          { explodingLift: explodingLiftEnabled }
+          { 
+            explodingLift: explodingLiftEnabled,
+            interval: interval
+          }
         );
         if (bestMove) {
           state.botIdleFrames = 0;

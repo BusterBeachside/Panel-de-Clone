@@ -48,51 +48,61 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onStart }) => {
       });
     });
 
-    // Sounds
-    assets.push(...SOUND_EFFECTS);
-    assets.push(...MUSIC_FILES);
+    // Cursor
+    assets.push("/p1_cursor.png");
 
-    const total = assets.length;
+    const audioAssets: string[] = [...SOUND_EFFECTS, ...MUSIC_FILES];
+
+    const total = assets.length + audioAssets.length;
     let loadedCount = 0;
 
     const incrementProgress = () => {
       loadedCount++;
-      setProgress(Math.floor((loadedCount / total) * 100));
+      setProgress(Math.min(100, Math.floor((loadedCount / total) * 100)));
       if (loadedCount >= total) {
         setTimeout(() => setIsLoaded(true), 500);
       }
     };
 
+    // Load and decode images onto the GPU to avoid rendering latency
     assets.forEach((url) => {
-      if (url.endsWith(".png")) {
-        const img = new Image();
+      const img = new Image();
+      img.src = url;
+      if (typeof img.decode === "function") {
+        img.decode()
+          .then(incrementProgress)
+          .catch(() => {
+            console.warn(`Failed to decode image: ${url}`);
+            incrementProgress();
+          });
+      } else {
         img.onload = incrementProgress;
         img.onerror = () => {
           console.warn(`Failed to track load for image: ${url}`);
           incrementProgress();
         };
-        img.src = url;
-      } else {
-        // Audio files - we don't strictly need to wait for full decode but it's better
-        // For simplicity and to avoid Howler dependency here, we can just fetch or assume they load
-        // Alternatively, use Howler to preload if we really want to be sure
-        const audio = new Audio();
-        audio.oncanplaythrough = incrementProgress;
-        audio.onerror = () => {
-          console.warn(`Failed to track load for audio: ${url}`);
-          incrementProgress();
-        };
-        audio.src = url;
-        audio.load();
       }
+    });
+
+    // Fetch and cache audio files to bypass media preloading policies
+    audioAssets.forEach((url) => {
+      fetch(url)
+        .then(() => {
+          incrementProgress();
+        })
+        .catch(() => {
+          console.warn(`Failed to preload audio via fetch: ${url}`);
+          incrementProgress();
+        });
     });
 
     // Fallback if some hangs
     const timer = setTimeout(() => {
       if (loadedCount < total) {
+        setProgress(100);
         setIsLoaded(true);
       }
-    }, 10000);
+    }, 8000);
 
     return () => clearTimeout(timer);
   }, []);

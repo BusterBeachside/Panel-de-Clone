@@ -37,8 +37,8 @@ export const Panel: React.FC<PanelProps> = ({
   const getImagePath = () => {
     if (state === "MATCHED") {
       const elapsed = FLASH_DURATION - stateTimer;
-      // In the last 200ms of MATCHED state, show the "face" graphic (frame 6)
-      if (stateTimer < 200) {
+      // In the last 233ms (14 frames) of MATCHED state, show the "face" graphic (frame 6)
+      if (stateTimer < 233) {
         return `/panels/panel${typeIdx}6.png`;
       }
       // For the rest, cycle between flash states (5 and 1)

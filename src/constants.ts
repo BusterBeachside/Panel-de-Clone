@@ -25,11 +25,11 @@ export const DEFAULT_CONTROLS: Controls = {
 };
 
 // Animation durations (ms)
-export const SWAP_DURATION = 66; // 4 frames at 60fps
+export const SWAP_DURATION = 83; // 5 frames at 60fps (83.33ms)
 export const FLASH_DURATION = 733; // 44 frames
 export const POP_DURATION = 150; // 9 frames per panel
 export const HOVER_DURATION = 200; // 12 frames
-export const FALL_DELAY = 0; // 1 frame per block cleanly
+export const FALL_DELAY = 48; // 3 frames (48ms) per block for ultra-smooth physical transitions
 
 export const INITIAL_RISING_SPEED = 0.002;
 

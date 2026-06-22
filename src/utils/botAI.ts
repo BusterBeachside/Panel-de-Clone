@@ -1,5 +1,5 @@
 import { GameState, Grid, PanelType } from "../types";
-import { GRID_WIDTH, GRID_HEIGHT } from "../constants";
+import { GRID_WIDTH, GRID_HEIGHT, FALL_DELAY, LEVEL_HOVER_MSEC } from "../constants";
 
 export type BotAction =
   | { type: "SWAP"; x: number; y: number; score: number; isChainSetup: boolean }
@@ -315,43 +315,45 @@ export const findBestMove = (
         // Chain Timing Check ("Too Late" Insert detection)
         let timingTooTight = false;
         const cursorSteps = Math.abs(state.cursor.x - firstSwapX) + Math.abs(state.cursor.y - y);
+        const botInterval = options?.interval ?? 150; // Milliseconds per action for the CPU
+        const requiredMs = (cursorSteps + dist) * botInterval;
+
+        const diffIdx = Math.max(0, Math.min(9, state.level - 1));
+        const hoverMsec = LEVEL_HOVER_MSEC[diffIdx] ?? 200;
+
         for (let checkX = minX; checkX <= maxX; checkX++) {
           const p = tempGrid[y][checkX];
           if (p) {
             const isGrounded = y === 0 || tempGrid[y - 1][checkX] !== null;
             if (isGrounded) {
-              // Find the first falling block above this position
-              let fallingBlockFound = false;
-              let poppingFramesRemaining = 0;
+              let msToLand = 0;
+              let foundBlock = null;
               let gap = 0;
+              let popDelay = 0;
 
               for (let aboveY = y + 1; aboveY < GRID_HEIGHT; aboveY++) {
                 const aboveP = grid[aboveY][checkX];
                 if (!aboveP) {
-                  gap++;
+                  if (foundBlock === null) gap++;
                 } else if (
                   ["MATCHED", "POPPING_WAIT", "POPPING", "POPPED"].includes(aboveP.state)
                 ) {
-                  // Popping blocks delay the fall. A typical pop takes ~60 frames.
-                  // We'll give a generous 30 frames minimum bonus if there's any popping block.
-                  poppingFramesRemaining += 30; 
-                } else if (
-                  aboveP.state === "FALLING" ||
-                  aboveP.state === "HOVERING"
-                ) {
-                  fallingBlockFound = true;
-                  break; 
+                  popDelay += aboveP.stateTimer;
                 } else {
-                  // Fixed block, nothing above will fall onto us anytime soon
-                  break;
+                  if (foundBlock === null) {
+                    foundBlock = aboveP;
+                  }
                 }
               }
 
-              if (fallingBlockFound) {
-                // Approximate allowed frames: 2 frames per gap space, plus popping delay
-                const maxAllowedFrames = poppingFramesRemaining + gap * 2;
-                const requiredTime = cursorSteps + dist * 2;
-                if (requiredTime > maxAllowedFrames) {
+              if (foundBlock) {
+                let blockSelfDelay = hoverMsec;
+                if (foundBlock.state === "HOVERING" || foundBlock.state === "FALLING") {
+                  blockSelfDelay = foundBlock.stateTimer;
+                }
+                msToLand = popDelay + gap * FALL_DELAY + blockSelfDelay;
+
+                if (requiredMs > msToLand) {
                   timingTooTight = true;
                 }
               }
