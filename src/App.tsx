@@ -430,6 +430,28 @@ export default function App() {
               )}
             </div>
 
+            {/* Desktop Pause/Unpause Button */}
+            <button
+              onClick={togglePause}
+              className={`w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-black uppercase text-sm tracking-wider transition-all shadow-lg hover:scale-[1.02] active:scale-[0.98] border-b-4 ${
+                isPaused
+                  ? "bg-emerald-500 text-emerald-950 border-emerald-700 hover:bg-emerald-400"
+                  : "bg-amber-500 text-amber-950 border-amber-700 hover:bg-amber-400"
+              }`}
+            >
+              {isPaused ? (
+                <>
+                  <Play className="w-4 h-4 fill-current" />
+                  Resume Game
+                </>
+              ) : (
+                <>
+                  <Pause className="w-4 h-4 fill-current" />
+                  Pause Game
+                </>
+              )}
+            </button>
+
             {gameMode === "tycoon" && (
               <div className="flex flex-col gap-2">
                 <button
@@ -897,6 +919,16 @@ export default function App() {
           />
         )}
       </AnimatePresence>
+
+      {/* Off-screen Preloaded Assets Container to force GPU texture compilation/residency */}
+      <div className="absolute top-0 left-0 w-0 h-0 overflow-hidden opacity-0 pointer-events-none invisible z-[-1]" aria-hidden="true">
+        {[1, 2, 3, 4, 5, 6, 8].map((t) => 
+          [1, 2, 3, 4, 5, 6, 7].map((f) => (
+            <img key={`${t}-${f}`} src={`/panels/panel${t}${f}.png`} alt="" referrerPolicy="no-referrer" />
+          ))
+        )}
+        <img src="/p1_cursor.png" alt="" referrerPolicy="no-referrer" />
+      </div>
     </div>
   );
 }

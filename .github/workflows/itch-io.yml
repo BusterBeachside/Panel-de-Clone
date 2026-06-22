@@ -20,8 +20,8 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-cache: npm
-          node-version: 20
+          cache: npm
+          node-version: 22
 
       - name: Install Dependencies
           # clean install
@@ -30,15 +30,9 @@ jobs:
       - name: Build Game
         run: npm run build
 
-      - name: Zip Build Output
-        run: |
-          cd dist
-          zip -r ../game.zip .
-          cd ..
-
-      - name: Upload Zip Artifact
+      - name: Upload Build Artifact
         uses: actions/upload-artifact@v4
         with:
           name: panel-attack-clone-html5
-          path: game.zip
+          path: dist/
 
