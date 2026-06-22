@@ -10,27 +10,27 @@ const PANEL_TYPES = [1, 2, 3, 4, 5, 6, 8];
 const FRAMES = [1, 2, 3, 4, 5, 6, 7];
 
 const SOUND_EFFECTS = [
-  "/sound/move.ogg",
-  "/sound/swap.ogg",
-  "/sound/combo.wav",
-  "/sound/land.ogg",
-  "/sound/gameover.ogg",
-  "/sound/fanfare1.ogg",
-  "/sound/fanfare2.ogg",
-  "/sound/fanfare3.ogg",
-  "/sound/coin.mp3",
+  "./sound/move.ogg",
+  "./sound/swap.ogg",
+  "./sound/combo.wav",
+  "./sound/land.ogg",
+  "./sound/gameover.ogg",
+  "./sound/fanfare1.ogg",
+  "./sound/fanfare2.ogg",
+  "./sound/fanfare3.ogg",
+  "./sound/coin.mp3",
 ];
 
 // Add chain and pop sounds to the list
-for (let i = 1; i <= 13; i++) SOUND_EFFECTS.push(`/sound/chain${i}.wav`);
+for (let i = 1; i <= 13; i++) SOUND_EFFECTS.push(`./sound/chain${i}.wav`);
 for (let s = 1; s <= 4; s++) {
-  for (let n = 1; n <= 10; n++) SOUND_EFFECTS.push(`/sound/pop${s}-${n}.ogg`);
+  for (let n = 1; n <= 10; n++) SOUND_EFFECTS.push(`./sound/pop${s}-${n}.ogg`);
 }
 
 const MUSIC_FILES = [
-  "/music/normal_music_start.ogg",
-  "/music/normal_music.ogg",
-  "/music/danger_music.ogg",
+  "./music/normal_music_start.ogg",
+  "./music/normal_music.ogg",
+  "./music/danger_music.ogg",
 ];
 
 export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onStart }) => {
@@ -44,12 +44,12 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onStart }) => {
     // Panels
     PANEL_TYPES.forEach((t) => {
       FRAMES.forEach((f) => {
-        assets.push(`/panels/panel${t}${f}.png`);
+        assets.push(`./panels/panel${t}${f}.png`);
       });
     });
 
     // Cursor
-    assets.push("/p1_cursor.png");
+    assets.push("./p1_cursor.png");
 
     const audioAssets: string[] = [...SOUND_EFFECTS, ...MUSIC_FILES];
 

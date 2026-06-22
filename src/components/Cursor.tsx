@@ -19,7 +19,7 @@ export const Cursor: React.FC<CursorProps> = ({ x, y, risingOffset }) => {
       }}
     >
       <img
-        src="/p1_cursor.png"
+        src="./p1_cursor.png"
         alt="cursor"
         className="w-[110%] h-[115%] object-fill scale-[1.15] drop-shadow-md"
         referrerPolicy="no-referrer"

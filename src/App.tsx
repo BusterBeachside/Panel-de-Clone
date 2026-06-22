@@ -924,10 +924,10 @@ export default function App() {
       <div className="absolute top-0 left-0 w-0 h-0 overflow-hidden opacity-0 pointer-events-none invisible z-[-1]" aria-hidden="true">
         {[1, 2, 3, 4, 5, 6, 8].map((t) => 
           [1, 2, 3, 4, 5, 6, 7].map((f) => (
-            <img key={`${t}-${f}`} src={`/panels/panel${t}${f}.png`} alt="" referrerPolicy="no-referrer" />
+            <img key={`${t}-${f}`} src={`./panels/panel${t}${f}.png`} alt="" referrerPolicy="no-referrer" />
           ))
         )}
-        <img src="/p1_cursor.png" alt="" referrerPolicy="no-referrer" />
+        <img src="./p1_cursor.png" alt="" referrerPolicy="no-referrer" />
       </div>
     </div>
   );

@@ -2,36 +2,36 @@ import { useCallback, useEffect, useRef } from "react";
 import { Howl } from "howler";
 
 const SOUNDS: Record<string, string> = {
-  move: "/sound/move.ogg",
-  swap: "/sound/swap.ogg",
-  combo: "/sound/combo.wav",
-  land: "/sound/land.ogg",
-  gameover: "/sound/gameover.ogg",
-  coin: "/sound/coin.mp3",
+  move: "./sound/move.ogg",
+  swap: "./sound/swap.ogg",
+  combo: "./sound/combo.wav",
+  land: "./sound/land.ogg",
+  gameover: "./sound/gameover.ogg",
+  coin: "./sound/coin.mp3",
 };
 
 // Chain sounds 1-13
 for (let i = 1; i <= 13; i++) {
-  SOUNDS[`chain${i}`] = `/sound/chain${i}.wav`;
+  SOUNDS[`chain${i}`] = `./sound/chain${i}.wav`;
 }
 
 // Pop sounds pop1-1 to pop4-10
 for (let set = 1; set <= 4; set++) {
   for (let num = 1; num <= 10; num++) {
-    SOUNDS[`pop${set}-${num}`] = `/sound/pop${set}-${num}.ogg`;
+    SOUNDS[`pop${set}-${num}`] = `./sound/pop${set}-${num}.ogg`;
   }
 }
 
 const FANFARES: Record<number, string> = {
-  4: "/sound/fanfare1.ogg",
-  5: "/sound/fanfare2.ogg",
-  6: "/sound/fanfare3.ogg",
+  4: "./sound/fanfare1.ogg",
+  5: "./sound/fanfare2.ogg",
+  6: "./sound/fanfare3.ogg",
 };
 
 const MUSIC = {
-  start: "/music/normal_music_start.ogg",
-  loop: "/music/normal_music.ogg",
-  danger: "/music/danger_music.ogg",
+  start: "./music/normal_music_start.ogg",
+  loop: "./music/normal_music.ogg",
+  danger: "./music/danger_music.ogg",
 };
 
 export const useAudio = () => {

@@ -39,22 +39,22 @@ export const Panel: React.FC<PanelProps> = ({
       const elapsed = FLASH_DURATION - stateTimer;
       // In the last 233ms (14 frames) of MATCHED state, show the "face" graphic (frame 6)
       if (stateTimer < 233) {
-        return `/panels/panel${typeIdx}6.png`;
+        return `./panels/panel${typeIdx}6.png`;
       }
       // For the rest, cycle between flash states (5 and 1)
       const cycleFrames = [5, 1];
       const cycleIdx = Math.floor(elapsed / 50) % cycleFrames.length;
-      return `/panels/panel${typeIdx}${cycleFrames[cycleIdx]}.png`;
+      return `./panels/panel${typeIdx}${cycleFrames[cycleIdx]}.png`;
     }
     if (state === "POPPING" || state === "POPPING_WAIT") {
-      return `/panels/panel${typeIdx}6.png`;
+      return `./panels/panel${typeIdx}6.png`;
     }
     if (state === "LANDING") {
       const elapsed = 200 - stateTimer;
       const cycleFrames = [4, 3, 2, 1];
       // 200ms total, 4 frames -> 50ms per frame
       const cycleIdx = Math.max(0, Math.min(3, Math.floor(elapsed / 50)));
-      return `/panels/panel${typeIdx}${cycleFrames[cycleIdx]}.png`;
+      return `./panels/panel${typeIdx}${cycleFrames[cycleIdx]}.png`;
     }
     if (
       isDanger &&
@@ -65,9 +65,9 @@ export const Panel: React.FC<PanelProps> = ({
     ) {
       const cycleFrames = [4, 1, 2, 3, 2, 1];
       const cycleIdx = Math.floor(Date.now() / 50) % cycleFrames.length; // Use Date.now() for synchronized jumping across column
-      return `/panels/panel${typeIdx}${cycleFrames[cycleIdx]}.png`;
+      return `./panels/panel${typeIdx}${cycleFrames[cycleIdx]}.png`;
     }
-    return `/panels/panel${typeIdx}1.png`; // Fallback to 1 (IDLE/FALLING/HOVERING)
+    return `./panels/panel${typeIdx}1.png`; // Fallback to 1 (IDLE/FALLING/HOVERING)
   };
 
   let xOffset = 0;
